@@ -7,7 +7,7 @@ const html = @"
   <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>1018 Granger Christmas Lights</title>
+    <title>House Christmas Lights</title>
     
     <link rel='stylesheet' href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
   </head>
@@ -58,10 +58,10 @@ const html = @"
 </html>
 "
 
-const PASSWORD = "1018"
+const PASSWORD = "mypassword"
 
 function getAstronomy(d){
-  local request = http.get("http://api.wunderground.com/api/f478b5ba268d0842/astronomy/q/42.273399,-83.713303.json");
+  local request = http.get("http://api.wunderground.com/api/<api-key-here>/astronomy/q/<lat>,<long>.json");
   local response = request.sendsync();
   local data = http.jsondecode(response.body);
     server.log("API data success, send to device")
@@ -74,7 +74,7 @@ function postLog(str){
   local d = { "log" : str };
   d = http.urlencode(d);
   local header = { "Content-Type" : "application/x-www-form-urlencoded" };
-  local output = http.post("http://bmargosian.com/lights/log.php",
+  local output = http.post("http://mywebsite.com/lights/log.php",
                   header,d).sendsync();
   server.log(format("Sending %s to log, recieved %s",d,output.body));
 }
@@ -121,7 +121,7 @@ function httpHandler(request, response) {
         }else if ("status" in request.query) {
           response.send(200,state);
         }else if ("log" in request.query) {
-          local request = http.get("http://bmargosian.com/lights/log.php?n=50");
+          local request = http.get("http://mywebsite.com/lights/log.php?n=50");
           local resp = request.sendsync();
           response.send(200,resp.body);
         }else {
